@@ -772,6 +772,7 @@ static UIFont *gTitleFont;
     
     KxMenuView *_menuView;
     BOOL        _observing;
+    UIView     *_containerView;
 }
 
 + (instancetype) sharedMenu
@@ -824,7 +825,7 @@ static UIFont *gTitleFont;
                                                    object:nil];
     }
 
-    
+    _containerView = view;
     _menuView = [[KxMenuView alloc] init];
     [_menuView showMenuInView:view fromRect:rect menuItems:menuItems];    
 }
@@ -835,6 +836,7 @@ static UIFont *gTitleFont;
         
         [_menuView dismissMenu:NO];
         _menuView = nil;
+        _containerView = nil;
     }
     
     if (_observing) {
@@ -842,6 +844,21 @@ static UIFont *gTitleFont;
         _observing = NO;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
+}
+
+- (BOOL)isMenuShowed
+{
+    BOOL isMenuShowed = NO;
+    for (UIView *view in _containerView.subviews)
+    {
+        if ([view isKindOfClass:[KxMenuOverlay class]])
+        {
+            isMenuShowed = YES;
+            break;
+        }
+    }
+    
+    return isMenuShowed;
 }
 
 - (void) orientationWillChange: (NSNotification *) n
@@ -859,6 +876,11 @@ static UIFont *gTitleFont;
 + (void) dismissMenu
 {
     [[self sharedMenu] dismissMenu];
+}
+
++ (BOOL)isMenuShowed
+{
+    return [[self sharedMenu] isMenuShowed];
 }
 
 + (UIColor *) tintColor

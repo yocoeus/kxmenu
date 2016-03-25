@@ -55,8 +55,8 @@
 + (void) showMenuInView:(UIView *)view
                fromRect:(CGRect)rect
               menuItems:(NSArray *)menuItems;
-
 + (void) dismissMenu;
++ (BOOL)isMenuShowed;
 
 + (UIColor *) tintColor;
 + (void) setTintColor: (UIColor *) tintColor;
